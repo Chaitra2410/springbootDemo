@@ -8,7 +8,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.example.employeeservice.dto.APIResponseDto;
 import com.example.employeeservice.dto.DepartmentDto;
 import com.example.employeeservice.dto.EmployeeDto;
+import com.example.employeeservice.dto.OrganizationDto;
 import com.example.employeeservice.entity.Employee;
+import com.example.employeeservice.mapper.EmployeeMapper;
 import com.example.employeeservice.repository.EmployeeRepository;
 import com.example.employeeservice.service.APIClient;
 import com.example.employeeservice.service.EmployeeService;
@@ -30,22 +32,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
 		
-		Employee employee = new Employee(
-				employeeDto.getId(),
-				employeeDto.getFirstName(),
-				employeeDto.getLastName(),
-				employeeDto.getEmail(),
-				employeeDto.getDepartmentCode()
-				);
+		Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
 		
 		Employee savedEmployee= employeeRepository.save(employee);
 		 
-		EmployeeDto savedEmployeeDto = new EmployeeDto(
-				 savedEmployee.getId(),
-				 savedEmployee.getFirstName(),
-				 savedEmployee.getLastName(),
-				 savedEmployee.getEmail(),
-				 savedEmployee.getDepartmentCode());
+		EmployeeDto savedEmployeeDto = EmployeeMapper.mapToEmployeeDto(savedEmployee);
 		return savedEmployeeDto;
 	}
 
@@ -64,19 +55,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 		.retrieve()
 		.bodyToMono(DepartmentDto.class)
 		.block();
+		
+	    OrganizationDto organizationDto = webClient.get()
+                .uri("http://localhost:8083/api/organizations/" + employee.getOrganizationCode())
+                .retrieve()
+                .bodyToMono(OrganizationDto.class)
+                .block();
+
 	
 //		  DepartmentDto departmentDto = apiClient.getDepartment(employee.getDepartmentCode());
 		
-		EmployeeDto employeeDto = new EmployeeDto(
-				employee.getId(),
-				employee.getFirstName(),
-				employee.getLastName(),
-				employee.getEmail(),
-				employee.getDepartmentCode());
+		EmployeeDto employeeDto = EmployeeMapper.mapToEmployeeDto(employee);
 		
 		APIResponseDto apiResponseDto = new APIResponseDto();
 		apiResponseDto.setEmployee(employeeDto);
 		apiResponseDto.setDepartment(departmentDto);
+		apiResponseDto.setOrganization(organizationDto);
 		
 		return apiResponseDto;
 	}
