@@ -15,6 +15,7 @@ import com.example.employeeservice.repository.EmployeeRepository;
 import com.example.employeeservice.service.APIClient;
 import com.example.employeeservice.service.EmployeeService;
 
+
 import lombok.AllArgsConstructor;
 
 @Service
@@ -40,6 +41,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return savedEmployeeDto;
 	}
 
+	
+//	@CircuitBreaker(name="${spring.application.name}",fallbackMethod = "getDefaultDepartment")
 	@Override
 	public APIResponseDto getEmployeeById(Long employeeId) {
 		
@@ -74,5 +77,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 		
 		return apiResponseDto;
 	}
-
+//	public APIResponseDto getDefaultDepartment(long employeeId, Exception exception) {
+//        Employee employee = employeeRepository.findById(employeeId).get();
+//		
+//		DepartmentDto departmentDto = new DepartmentDto();
+//		departmentDto.setDepartmentName("R&D");
+//		departmentDto.setDepartmentDescription("Reasearch and Development");
+//		departmentDto.setDepartmentCode("RD001");
+//		
+//		 OrganizationDto organizationDto = new OrganizationDto();
+//		 organizationDto.setOrganizationName("R&D");
+//		 organizationDto.setOrganizationDescription("Reasearh");
+//		 organizationDto.setOrganizationCode("RO001)");
+//				
+// 
+//				
+//				EmployeeDto employeeDto = new EmployeeDto(
+//						employee.getId(),
+//						employee.getFirstName(),
+//						employee.getLastName(),
+//						employee.getEmail(),
+//						employee.getDepartmentCode(),
+//						employee.getOrganizationCode()
+//						);
+//				
+//				APIResponseDto apiResponseDto = new APIResponseDto();
+//				apiResponseDto.setEmployee(employeeDto);
+//				apiResponseDto.setDepartment(departmentDto);
+//				apiResponseDto.setOrganization(organizationDto);
+//				
+//				return apiResponseDto;
+//		
+//	}
 }
